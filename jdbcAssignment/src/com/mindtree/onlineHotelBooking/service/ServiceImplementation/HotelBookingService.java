@@ -25,7 +25,9 @@ public class HotelBookingService implements ServiceInterface {
 		city = scan.next();
 		HotelEntity emp = new HotelEntity(hotelId, hotelName, city);
 		set.add(emp);
+		System.out.println("added succesfully");
 		dao.addHotelDetails(hotelId,hotelName,city);
+		
 		return set;
 	}
 
