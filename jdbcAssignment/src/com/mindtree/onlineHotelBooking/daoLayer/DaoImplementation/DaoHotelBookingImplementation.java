@@ -10,7 +10,9 @@ import java.util.Set;
 import com.mindtree.onlineHotelBooking.daoLayer.DaoHotelBookingInterface;
 import com.mindtree.onlineHotelBooking.entity.HotelEntity;
 import com.mindtree.onlineHotelBooking.entity.RoomEntity;
-import com.mindtree.onlineHotelBooking.exception.MyException;
+
+import com.mindtree.onlineHotelBooking.exception.DaoExceptions.CityNotFoundException;
+import com.mindtree.onlineHotelBooking.exception.DaoExceptions.DaoExceptions;
 import com.mindtree.onlineHotelBooking.utility.DBUtill;
 
 public class DaoHotelBookingImplementation implements DaoHotelBookingInterface{
@@ -20,30 +22,12 @@ Connection con;
 	
 	
 	@Override
-	public void displayAllHotelDetails(Set<HotelEntity> set) throws Exception {
+	public void displayAllHotelDetails(Set<HotelEntity> set) throws Exception ,CityNotFoundException{
 		// TODO Auto-generated method stub
 		System.out.println("Enter the city");
 		String city=scan.next();
 		boolean check=true;
-		/*for(HotelEntity hotel:set)
-		{
-			if(hotel.getCity().equalsIgnoreCase(city))
-			{
-				check=false;				//System.out.println(hotel);
-				
-			}
-		}
-		try {
-		if(check)
-		{
-			throw new MyException("No such City are there");
-		}
-		}
-		catch(Exception e) {
-			System.out.println(e);
-		}*/
-		//if(check==false)
-		//{
+		
 		con =DBUtill.getMyConnection();
 		Statement st = con.createStatement();
 		//String query = "select * from hotel where city=" + "'" + city + "'" ;
@@ -63,16 +47,16 @@ Connection con;
 		
 		}
 		else
-			throw new MyException("No such City are there");
+			throw new CityNotFoundException("No such City are there");
 		}
-	catch(Exception e) {
-		System.out.println(e);
+	catch(CityNotFoundException e) {
+		throw new CityNotFoundException("No such City are there");
 	}
 		DBUtill.closeResource(st);
 		DBUtill.closeResource(con);
 		}
 
-	public void addHotelDetails(int hotelId, String hotelName, String city) throws Exception {
+	public void addHotelDetails(int hotelId, String hotelName, String city) throws Exception{
 		// TODO Auto-generated method stub
 		try {
 			con = DBUtill.getMyConnection();
@@ -82,7 +66,7 @@ Connection con;
 			st.executeUpdate(sree);
 			DBUtill.closeResource(st);
 			DBUtill.closeResource(con);
-			}catch(SQLException e) {System.out.println(e);}
+			}catch(SQLException e) {throw new DaoExceptions("Duplicate Entry");}
 	}
 	public void addRoomDetails(int roomNumber, String roomType, double cost, int hotelId) throws Exception {
 		// TODO Auto-generated method stub
@@ -93,13 +77,13 @@ Connection con;
 			st.executeUpdate(sree);
 			DBUtill.closeResource(st);
 			DBUtill.closeResource(con);
-			}catch(SQLException e) {System.out.println(e);}
+			}catch(SQLException e) {throw new DaoExceptions("Duplicate Entry");}
 			
 	}
 			
 		
 	}
 
-	//}
+	
 
 
